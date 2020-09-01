@@ -1,0 +1,64 @@
+﻿@model LoginViewModel;
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-12 main-content-container text-left pl-4 pr-4 pl-lg-5 pr-lg-5 pl-md-5 pr-md-5 mb-3 mb-sm-5 mb-md-2 mb-lg-2  mb-xl-2">
+        <div class="text-left pt-4">
+            <h2 class="huge-text">Sign in</h2>
+        </div>
+        <form method="post">
+
+            <label asp-for="Email" class="normal-text"></label>
+            <input type="text" asp-for="Email" class="form-control loginInput" placeholder="Enter email address..." name="Email" />
+
+
+            <label asp-for="Password" class="normal-text"></label>
+            <input type="password" asp-for="Password" class="form-control loginInput" placeholder="Enter password..." name="Password" />
+
+            <div class="row justify-content-start">
+                <label class="checkbox-container very-small-text" asp-for="RememberMe">
+                    @Html.DisplayNameFor(m => m.RememberMe)
+                    <input asp-for="RememberMe" type="checkbox" class="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+
+            <div class="row justify-content-center">
+                <button type="submit" class="btn btn-primary main-button">LOGIN</button>
+            </div>
+            <div class="row justify-content-center pt-3 pb-0">
+                <a asp-action="ForgotPassword" class="very-small-text">Forgot Password</a>
+            </div>
+
+            <div asp-validation-summary="All" class="text-danger space"></div>
+        </form>
+        <div class="break-line"></div>
+        <div class="row justify-content-center pt-2">
+            <span class="very-small-text">Or link your account with:</span>
+        </div>
+        @{
+            if (Model.ExternalLogins.Count == 0)
+            {
+                <div>No External logins provided</div>
+            }
+            else
+            {
+                <form method="post" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                    <div class="row justify-content-around">
+                        <button type="submit" class="facebook-button"
+                                name="provider" value="@Model.ExternalLogins[0].Name"
+                                title="login using your @Model.ExternalLogins[0].DisplayName account">
+                            FACEBOOK
+                        </button>
+                        <button type="submit" class="google-button"
+                                name="provider" value="@Model.ExternalLogins[1].Name"
+                                title="login using your @Model.ExternalLogins[1].DisplayName account">
+                            GOOGLE
+                        </button>
+                    </div>
+                </form>
+            }
+        }
+        <div class="m-4"></div>
+    </div>
+</div>
+
+

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)ligershark.weboptimizer.core\3.0.250\build\LigerShark.WebOptimizer.Core.targets" Condition="Exists('$(NuGetPackageRoot)ligershark.weboptimizer.core\3.0.250\build\LigerShark.WebOptimizer.Core.targets')" />
+    <Import Project="$(NuGetPackageRoot)buildwebcompiler\1.12.405\build\BuildWebCompiler.targets" Condition="Exists('$(NuGetPackageRoot)buildwebcompiler\1.12.405\build\BuildWebCompiler.targets')" />
+  </ImportGroup>
+</Project>

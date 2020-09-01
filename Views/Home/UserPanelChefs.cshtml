@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Observe>
+@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager;
+@inject IObserveRepository observeRepository;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+
+@{
+    var user = await userManager.GetUserAsync(User);
+    ViewBag.Title = "User Panel";
+    var avatarPhotoPath = "~/images/avatars/" + (user.AvatarPhotoPatch ?? "user_no_avatar.png");
+}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-sm-12 col-xl-4 col-lg-4 pl-0 pr-0 pr-md-3 pr-lg-3 pr-xl-3">
+        <div class="main-content-container text-center p-1 p-sm-3 p-md-3 p-lg-3 p-xl-3 mb-3 mb-sm-5 pb-2 pt-2">
+            <div class="col-auto justify-content-center">
+                <div class="row justify-content-center m-1">
+                    <img src="@avatarPhotoPath" alt="sory, no image!" class="imageThubnail avatar-photo" asp-append-version="true" />
+                </div>
+                <div class="m-1"><h3 class="normal-bold-text" style="word-wrap: break-word">@user.AcconutName </h3></div>
+                <div class="m-1"><h3 class="normal-text" style="word-wrap: break-word">@user.Email</h3></div>
+                <div class=""><a class="small-text-shaded" asp-controller="home" asp-action="userpanelrecipes">Recipes</a></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="home" asp-action="userpanelchefs">Chefs</a></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="home" asp-action="userpanelfavourites">Favourites</a></div>
+                <div class="break-line"></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="Account" asp-action="ChangePassword">Change password</a></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="Account" asp-action="ChangeAvatar" asp-route-id="@user.Id">Edit avatar</a></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="Account" asp-action="ChangeAccountName" asp-route-id="@user.Id">Change user name</a></div>
+                <div class="break-line"></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="Home" asp-action="CreateRecipe">Add Recipe</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-xl-8 col-lg-8 pr-0 pl-0">
+        <div class="main-content-container  mb-3 mb-sm-5">
+            <p class="normal-bold-text pt-4 mb-2 ml-4">YOUR FAVOURITE CHEFS</p>
+            <div class="row">
+                @foreach (var observ in observeRepository.GetObservedChefsByUserId(user.Id))
+                {
+                    var chef = await userManager.FindByIdAsync(observ.UserObserverdId);
+                    var chefPhotoPath = "~/images/avatars/" + (chef.AvatarPhotoPatch ?? "user_no_avatar_black.png");
+                    <div class="col-lg-6 col-xl-6 col-md-12 col-sm-6 m-0 col-12 p-2">
+                        <div class="row chef-container center-all">
+                            <div class="col-3 col-lg-3 col-xl-3 col-md-3 col-sm-3">
+                                <img src="@chefPhotoPath" alt="sory, no image!" class="imageThubnail avatar-photo" asp-append-version="true" />
+                            </div>
+                            <div class="col-9 col-lg-9 col-xl-9 col-md-9 col-sm-9">
+                                <div class="row">
+                                    <span class="normal-bold-text">@chef.AcconutName </span>
+                                </div>
+                                <div class="row">
+                                    <img src="~/images/layout/follow_black.png" class="details-max-min-img-info" />
+                                    &nbsp
+                                    <span class="normal-text">@observeRepository.GetObserversByUserId(chef.Id).Count()</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-auto">
+                    @Html.PagedListPager((IPagedList)Model, page => Url.Action("UserPanelChefs", new { page = page }),
+        new X.PagedList.Mvc.Core.Common.PagedListRenderOptions
+        {
+        ContainerDivClasses = new[] { "mb-3" },
+                LiElementClasses = new[] { "page-item normal-text" },
+                PageClasses = new[] { "page-link normal-text page-item" },
+                ActiveLiElementClass = "page-acvite",
+        })
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

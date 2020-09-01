@@ -1,0 +1,136 @@
+﻿@model IndexViewModel
+@{
+    ViewBag.Title = "Recipe List";
+}
+
+
+    <div class="col-auto main-content-container text-center  mb-3 mb-sm-5 mb-lg-5 mb-md-5">
+        <div class="text-left pt-5 pl-lg-5 pl-md-4 pl-sm-3 pl-3">
+            <h2 class="normal-bold-text">LAST RECIPES</h2>
+        </div>
+        <div class="row text-center justify-content-left pb-4">
+            @foreach (var recipe in Model.LastRecipes)
+            {
+                var photoPath = "~/images/" + (recipe.PhotoPatch ?? "leczo.jpg");
+                <div class="col-auto m-0 p-2 recipe-box-size">
+                    <div class="recipe-box">
+                        <img src="@photoPath" alt="sory, no image!" class="imageThubnail recipe-box-img" asp-append-version="true" style="width:100%" />
+                        <div class="recipe-box-desc center-all">
+                            <span class="big-text">@recipe.Name</span>
+                        </div>
+                        <div class="recipe-box-desc-details center-all">
+                            <a asp-controller="home" asp-action="details" asp-route-id="@recipe.EncryptedId">
+                                <div class="col">
+                                    <div>
+                                        <span class="big-bold-text">@recipe.Name</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="very-small-shaded-text">"@recipe.Hint"</p>
+                                    </div>
+                                    <div class="m-1">
+                                        <div class="row justify-content-center">
+                                            @for (int i = 1; i < 6; i++)
+                                            {
+                                                if (recipe.Rating > i - 1)
+                                                {
+                                                    <div class="star-full"></div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="star-empty"></div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="m-1">
+                                        @if (@recipe.DifficultLevel == 1)
+                                        {
+                                            <span class="normal-text">Easy to do</span>
+                                        }
+                                        else if (@recipe.DifficultLevel == 2)
+                                        {
+                                            <span class="normal-text">Average to do</span>
+                                        }
+                                        else if (@recipe.DifficultLevel == 3)
+                                        {
+                                            <span class="normal-text">Hard to do</span>
+                                        }
+                                    </div>
+                                    <div class="m-1">
+                                        <img src="~/images/layout/clock.png" class="recipe-desc-img" />
+                                        <span class="normal-text">@recipe.Time.ToString()min</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-auto main-content-container  mb-3 mb-sm-5 text-center">
+        <div class="text-left pt-5 pl-lg-5 pl-md-4 pl-sm-3 pl-3">
+            <h2 class="normal-bold-text">BEST FROM LAST MONTH</h2>
+        </div>
+        <div class="row text-center justify-content-between  pb-4">
+            @foreach (var recipe in Model.LastBestRecipes)
+            {
+                var photoPath = "~/images/" + (recipe.PhotoPatch ?? "leczo.jpg");
+                <div class="col-auto m-0 p-1 recipe-box-size">
+                    <div class="recipe-box">
+                        <img src="@photoPath" alt="sory, no image!" class="imageThubnail recipe-box-img" asp-append-version="true" style="width:100%" />
+                        <div class="recipe-box-desc center-all">
+                            <span class="big-text">@recipe.Name</span>
+                        </div>
+                        <div class="recipe-box-desc-details center-all">
+                            <a asp-controller="home" asp-action="details" asp-route-id="@recipe.EncryptedId">
+                                <div class="col">
+                                    <div>
+                                        <span class="big-bold-text">@recipe.Name</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="very-small-shaded-text">"@recipe.Hint"</p>
+                                    </div>
+                                    <div class="m-1">
+                                        <div class="row justify-content-center">
+                                            @for (int i = 1; i < 6; i++)
+                                            {
+                                                if (recipe.Rating > i - 1)
+                                                {
+                                                    <div class="star-full"></div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="star-empty"></div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="m-1">
+                                        @if (@recipe.DifficultLevel == 1)
+                                        {
+                                            <span class="normal-text">Easy to do</span>
+                                        }
+                                        else if (@recipe.DifficultLevel == 2)
+                                        {
+                                            <span class="normal-text">Average to do</span>
+                                        }
+                                        else if (@recipe.DifficultLevel == 3)
+                                        {
+                                            <span class="normal-text">Hard to do</span>
+                                        }
+                                    </div>
+                                    <div class="m-1">
+                                        <img src="~/images/layout/clock.png" class="recipe-desc-img" />
+                                        <span class="normal-text">@recipe.Time.ToString()min</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+

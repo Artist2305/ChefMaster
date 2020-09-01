@@ -1,0 +1,23 @@
+﻿@model ChangeAvatarViewModel
+
+@{
+    var user = await userManager.GetUserAsync(User);
+    ViewBag.Title = "User Panel";
+    var avatarPhotoPath = "~/images/avatars/" + (user.AvatarPhotoPatch ?? "user_no_avatar.png");
+}
+    <div class="row justify-content-center">
+        <div class="col-12 col-lx-6 col-lg-6 col-md-12 col-sm-12 main-content-container text-left pl-3 pr-3 pl-md-5 pr-md-5">
+            <div class="row text-center justify-content-center align-self-center pt-4">
+                <div class="col-auto">
+                    <img src="@avatarPhotoPath" alt="sory, no image!" class="imageThubnail avatar-photo" asp-append-version="true" />
+                </div>
+            </div>
+            <div class="text-center pt-4 pb-4">
+                <h3 class="main-text-color main-bold-text-style">
+                    You have successfully set a new avatar picture!
+                </h3>
+                <h2 class="very-small-shaded-text"> <a asp-controller="home" asp-action="userpanelrecipes">Click here</a> to continue on user panel.</h2>
+            </div>
+        </div>
+    </div>
+

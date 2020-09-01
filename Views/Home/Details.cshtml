@@ -1,0 +1,375 @@
+﻿@model HomeDetailsViewModel
+@inject IFavouriteRepository favouriteRepository
+@inject IRateRepository rateRepository
+@inject IRecipeRepository recipeRepository
+@inject IObserveRepository observeRepository
+@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager;
+
+@{
+    var loggedUserId = userManager.GetUserId(User);
+    var user = await userManager.FindByIdAsync(Model.Recipe.AuthorId);
+    ViewBag.Title = "Recipe Details";
+    var photoPath = "~/images/" + (Model.Recipe.PhotoPatch ?? "leczo.jpg");
+    var avatarPhotoPath = "~/images/avatars/" + (user.AvatarPhotoPatch ?? "avatar_no_image.png");
+}
+
+<input type="hidden" asp-for="@loggedUserId" class="Model_LoggedUserId" />
+<input type="hidden" asp-for="@Model.Recipe.AuthorId" class="Model_RecipeAuthorId" />
+<input type="hidden" asp-for="@Model.Recipe.Id" class="Model_RecipeId" />
+
+
+
+<div class="row">
+    <div class="col-12 pl-0 pr-0 col-md-9 col-lg-9 pl-lg-2 pr-lg-2 pl-md-2 pr-md-3 pr-lg-3">
+        <div class="main-content-container mb-3 mb-sm-5">
+            <div class="row center-all pt-4">
+                <p class="normal-bold-text"> @Model.Recipe.Name</p>
+            </div>
+            <div class="row text-center center-all mr-2 ml-2">
+                <p class="normal-text">@Model.Recipe.Hint</p>
+            </div>
+
+            <div class="row details-img">
+                <img src="@photoPath" alt="sory, no image!" asp-append-version="true" />
+            </div>
+            <div class="row justify-content-between">
+                <div class="col-12 col-lg-6 col-xl-6 col-sm-12 col-md-6">
+                    <div class="row justify-content-start">
+
+                        <img src="@avatarPhotoPath" alt="sory, no image!" class="imageThubnail avatar-photo" asp-append-version="true" />
+
+                        <div class="col">
+                            <p class="normal-bold-text mb-2 text-left">@user.AcconutName </p>
+                            <div class="row justify-content-start">
+                                <img src="~/images/layout/follow_black_.png" class="followers-details-photo" />
+                                &nbsp
+                                <p class="normal-bold-text">@observeRepository.GetObserversByUserId(Model.Recipe.AuthorId).Count() </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 col-lg-6 col-xl-6 col-sm-12 col-md-6">
+                    <div class="row justify-content-end pr-3 mt-1">
+                        <p class="OveralRating very-small-text mb-1">Rate the recipe to advise others! Average: @Model.Recipe.Rating (@Model.Recipe.AmountOfRates votes)</p>
+                    </div>
+                    <div class="row justify-content-end pr-3">
+                        @for (int i = 1; i < 6; i++)
+                        {
+                            if (Model.Recipe.Rating > i - 1)
+                            {
+                                <div data-value='@i' class="star-full RateIt"></div>
+                            }
+                            else
+                            {
+                                <div data-value='@i' class="star-empty RateIt"></div>
+                            }
+                        }
+                    </div>
+                    <div class="row justify-content-end pr-3">
+                        <p class="very-small-text mt-1">Added: @Model.Recipe.AddedTime.ToString("MM/dd/yyyy")</p>
+                    </div>
+                </div>
+            </div>
+            <div class="break-line-details"></div>
+            <div class="mob-break-line"></div>
+            <div class="row justify-content-center mt-3 pb-3">
+                <div class="col-2">
+                    @{
+                        if (observeRepository.IsObservedOfUser(loggedUserId, Model.Recipe.AuthorId))
+                        {
+                            <div class="center-all FollowHim" data-toggle="tooltip" data-placement="top" title="You already follow him">
+
+                                <img src="~/images/layout/observe_green.png" class="details-option-button" />
+                            </div>
+                        }
+                        else if (signInManager.IsSignedIn(User))
+                        {
+                            <div class="center-all FollowHim" data-toggle="tooltip" data-placement="top" title="Click to follow him">
+                                <img src="~/images/layout/observe_green.png" class="details-option-button" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="center-all FollowHim" data-toggle="tooltip" data-placement="top" title="Please log in first">
+                                <img src="~/images/layout/observe_green.png" class="details-option-button" />
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-2">
+                    @{
+                        if (favouriteRepository.IsFavouriteOfUser(loggedUserId, Model.Recipe.Id))
+                        {
+                            <div class="center-all AddToFavourite" data-toggle="tooltip" data-placement="top" title="You already got it">
+                                <img src="~/images/layout/favourite_green.png" class="details-option-button" />
+                            </div>
+                        }
+                        else if (signInManager.IsSignedIn(User))
+                        {
+                            <div class="center-all AddToFavourite" data-toggle="tooltip" data-placement="top" title="Click to add to favourite">
+                                <img src="~/images/layout/favourite_green.png" class="details-option-button" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="center-all AddToFavourite" data-toggle="tooltip" data-placement="top" title="Please log in first">
+                                <img src="~/images/layout/favourite_green.png" class="details-option-button" />
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-2">
+                    <div class="center-all ShareIt" data-toggle="tooltip" data-placement="top" title="Click to share it on facebook">
+                        <img src="~/images/layout/facebook_green.png" class="details-option-button" />
+                    </div>
+                </div>
+                <div class="col-2">
+                    <a href="#CommentSection">
+                        <div class="center-all AddComment" data-toggle="tooltip" data-placement="top" title="Click to add comment">
+                            <img src="~/images/layout/comment_green.png" class="details-option-button" />
+                        </div>
+                    </a>
+                </div>
+                <div class="col-2">
+                    <div class="center-all ReportIt" data-toggle="tooltip" data-placement="top" title="Click to report it">
+                        <img src="~/images/layout/complain_green.png" class="details-option-button" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-content-container mb-3 mb-sm-5">
+            <p class="small-text pt-4 pt-sm-4 pl-4 pl-sm-5 pl-md-5 pl-lg-5 mb-1">INGRIDIENTS</p>
+            <div class="row text-left normal-text pl-1 pr-1 pb-3 pl-sm-4 pl-md-4 pl-lg-4 pr-sm-4 pr-md-4 pr-lg-4 pb-sm-4">
+                <ul>
+                    @for (int i = 0; i < Model.Ingridients.Count; i++)
+                    {
+                        <li class="small-text">@Model.Ingridients[i]</li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-content-container mb-3 mb-sm-5">
+            <p class="small-text pt-4 pt-sm-4 pl-4 pl-sm-5 pl-md-5 pl-lg-5 mb-1">HOW TO DO IT?</p>
+            <div class="row text-left normal-text pl-4 pr-4 pb-3 pl-sm-5 pl-md-5 pl-lg-5 pr-sm-5 pr-md-5 pr-lg-5 pb-sm-4">
+                <p class="normal-text">@Model.Recipe.Description</p>
+            </div>
+        </div>
+
+        <div class="main-content-container mb-3 mb-sm-5">
+            <p class="small-text pt-4 pt-sm-4 pl-4 pl-sm-5 pl-md-5 pl-lg-5 mb-1">COMMENTS</p>
+
+            @if (Model.Comments.Count() >= 1)
+            {
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="col pl-4 pr-4 pb-3 pl-sm-5 pl-md-5 pl-lg-5 pr-sm-5 pr-md-5 pr-lg-5 pb-sm-4">
+                        <div class="break-line-details"></div>
+                        <div class="mob-break-line"></div>
+                        @{
+                            <div class="m-3"></div>
+                            var author = await userManager.FindByIdAsync(comment.UserId);
+                            var authorPhotoPath = "~/images/avatars/" + (author.AvatarPhotoPatch ?? "user_no_avatar_black.png");
+                            <div class="col-auto">
+                                <img src="@authorPhotoPath" alt="sory, no image!" class="imageThubnail avatar-photo" asp-append-version="true" />
+                            </div>
+                            <div>
+                                <div class="text-left">
+                                    <p class="mb-2 mt-2">@author.AcconutName wrote:</p>
+                                </div>
+                                <div class="text-left">
+                                    <p class="mb-2"><span style="font-style:italic">@comment.CommentText</span></p>
+                                </div>
+                                <div class="text-right">
+                                    <p>@comment.TimeAdded</p>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row text-left ml-5 mb-2 mr-5">
+                    <p><span style="font-style:italic"> There is no comment now. Be first and add a comment!</span></p>
+                </div>
+            }
+
+        </div>
+        <div class="NewComment main-content-container mb-3 mb-sm-5" id="CommentSection">
+            <form enctype="multipart/form-data" asp-controller="Home" asp-action="AddComment" method="post">
+                <input type="hidden" asp-for="@loggedUserId" name="userId" />
+                <input type="hidden" asp-for="@Model.Recipe.Id" name="recipeId" />
+                <input type="hidden" asp-for="@Model.Recipe.EncryptedId" name="recipeEncryptedId" />
+                <div class="col pl-4 pr-4 pb-3 pl-sm-5 pl-md-5 pl-lg-5 pr-sm-5 pr-md-5 pr-lg-5 pb-sm-4">
+                    <label asp-for="@Model.NewComment" class="small-text text-left pt-3 pt-sm-4 pt-lg-4 mb-1"></label>
+                    <div class="break-line-details"></div>
+                    <textarea asp-for="@Model.NewComment" name="newComment" autocomplete="off" class="second-normal-text-style">
+                        </textarea>
+                    <span class="text-danger" asp-validation-for="@Model.NewComment"></span>
+                    <div>
+                        <button type="submit" class="btn main-button">Add Comment</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class=" NewReport main-content-container mb-3 mb-sm-5" id="CommentSection">
+            <form enctype="multipart/form-data" asp-controller="Home" asp-action="SendReport" method="post">
+                <input type="hidden" asp-for="@loggedUserId" name="userId" />
+                <input type="hidden" asp-for="@Model.Recipe.Id" name="recipeId" />
+                <input type="hidden" asp-for="@Model.Recipe.EncryptedId" name="recipeEncryptedId" />
+                <div class="col pl-4 pr-4 pb-3 pl-sm-5 pl-md-5 pl-lg-5 pr-sm-5 pr-md-5 pr-lg-5 pb-sm-4">
+                    <label asp-for="@Model.NewReport" class="small-text text-left pt-3 pt-sm-4 pt-lg-4 mb-1"></label>
+                    <div class="break-line-details"></div>
+                    <textarea asp-for="@Model.NewReport" name="newComment" autocomplete="off" class="small-text">
+                        </textarea>
+                    <span class="text-danger" asp-validation-for="@Model.NewReport"></span>
+                    <div>
+                        <button type="submit" class="btn main-button">Send Report</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row mb-2 mb-sm-3 justify-content-end">
+            @{
+                if (loggedUserId == Model.Recipe.AuthorId)
+                {
+                    <button asp-controller="home" asp-action="edit" asp-route-id="@Model.Recipe.EncryptedId" class="btn main-button">Edit</button>
+                }
+            }
+        </div>
+    </div>
+    <div class="main-content-container col-12 pl-0 pl-sm-0 pl-md-0 pl-lg-0 pl-xl-0 pr-0 col-sm-12 col-md-3 pr-0 col-lg-3 col-xl-3 pr-lg-0 pr-xl-0  mb-3 mb-sm-0">
+        <div class="text-left pt-2 pl-2 pr-2">
+            <p class="very-big-text text-center pt-4 mb-0">Other recipes</p>
+        </div>
+        <div class="row justify-content-center">
+            @foreach (var recipe in Model.ThreeRandomUserRecipe)
+            {
+                var addidionalPhotoPath = "~/images/" + (recipe.PhotoPatch ?? "leczo.jpg");
+                <div class="col-auto p-1 center-all recipe-box-size-details">
+                    <div class="recipe-box center-all">
+                        <img src="@photoPath" alt="sory, no image!" class="imageThubnail recipe-box-img" asp-append-version="true" style="width:100%" />
+                        <div class="recipe-box-desc text-center center-all">
+                            <span class="big-text">@recipe.Name</span>
+                        </div>
+                        <div class="recipe-box-desc-details center-all text-center">
+                            <a asp-controller="home" asp-action="details" asp-route-id="@recipe.EncryptedId">
+                                <div class="col">
+                                    <div>
+                                        <span class="big-bold-text">@recipe.Name</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="very-small-shaded-text">"@recipe.Hint"</p>
+                                    </div>
+                                    <div class="m-1">
+                                        <div class="row justify-content-center">
+                                            @for (int i = 1; i < 6; i++)
+                                            {
+                                                if (recipe.Rating > i - 1)
+                                                {
+                                                    <div class="star-full"></div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="star-empty"></div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="m-1">
+                                        @if (@recipe.DifficultLevel == 1)
+                                        {
+                                            <span class="normal-text">Easy to do</span>
+                                        }
+                                        else if (@recipe.DifficultLevel == 2)
+                                        {
+                                            <span class="normal-text">Average to do</span>
+                                        }
+                                        else if (@recipe.DifficultLevel == 3)
+                                        {
+                                            <span class="normal-text">Hard to do</span>
+                                        }
+                                    </div>
+                                    <div class="m-1">
+                                        <img src="~/images/layout/clock.png" class="recipe-desc-img" />
+                                        <span class="normal-text">@recipe.Time.ToString()min</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="text-left pt-2 pl-2 pr-2">
+            <p class="very-big-text text-center pt-4 mb-0">Other recipes of author</p>
+        </div>
+        <div class="row justify-content-center">
+            @foreach (var recipe in Model.ThreeRandomOtherRecipe)
+            {
+                var addidionalPhotoPath = "~/images/" + (recipe.PhotoPatch ?? "leczo.jpg");
+                <div class="col-auto p-1 center-all recipe-box-size-details">
+                    <div class="recipe-box center-all">
+                        <img src="@photoPath" alt="sory, no image!" class="imageThubnail recipe-box-img" asp-append-version="true" style="width:100%" />
+                        <div class="recipe-box-desc text-center center-all">
+                            <span class="big-text">@recipe.Name</span>
+                        </div>
+                        <div class="recipe-box-desc-details center-all text-center">
+                            <a asp-controller="home" asp-action="details" asp-route-id="@recipe.EncryptedId">
+                                <div class="col">
+                                    <div>
+                                        <span class="big-bold-text">@recipe.Name</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="very-small-shaded-text">"@recipe.Hint"</p>
+                                    </div>
+                                    <div class="m-1">
+                                        <div class="row justify-content-center">
+                                            @for (int i = 1; i < 6; i++)
+                                            {
+                                                if (recipe.Rating > i - 1)
+                                                {
+                                                    <div class="star-full"></div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="star-empty"></div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="m-1">
+                                        @if (@recipe.DifficultLevel == 1)
+                                        {
+                                            <span class="normal-text">Easy to do</span>
+                                        }
+                                        else if (@recipe.DifficultLevel == 2)
+                                        {
+                                            <span class="normal-text">Average to do</span>
+                                        }
+                                        else if (@recipe.DifficultLevel == 3)
+                                        {
+                                            <span class="normal-text">Hard to do</span>
+                                        }
+                                    </div>
+                                    <div class="m-1">
+                                        <img src="~/images/layout/clock.png" class="recipe-desc-img" />
+                                        <span class="normal-text">@recipe.Time.ToString()min</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+

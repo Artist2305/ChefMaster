@@ -1,0 +1,18 @@
+﻿<div class="row justify-content-center">
+    <div class="col-md-8 col-sm-12 col-xs-12 greenCard">
+        @if (ViewBag.ErrorTitle == null)
+        {
+            <h3>
+                <span class="main-normal-text-style main-text-color">
+                    An error occured while processing your request.
+                    The support team is notified and we are working on the fix
+                </span>
+            </h3>
+        }
+        else
+        {
+            <h1 class="text-danger"><span class="main-normal-text-style main-text-color">@ViewBag.ErrorTitle</span></h1>
+            <h6 class="text-danger"><span class="main-normal-text-style main-text-color">@ViewBag.ErrorMessage</span></h6>
+        }
+    </div>
+</div>

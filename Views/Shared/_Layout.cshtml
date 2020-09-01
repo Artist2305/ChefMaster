@@ -1,0 +1,535 @@
+﻿@inject SignInManager<ApplicationUser> signInManager;
+@inject IRecipeRepository recipeRepository;
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <environment include="Development">
+
+        <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js" rel="stylesheet"></script>
+    </environment>
+    <environment exclude="Development">
+
+        <link rel="stylesheet"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+              integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+              crossorigin="anonymous"
+              asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only"
+              asp-fallback-test-property="position"
+              asp-fallback-test-value="absolute"
+              asp-suppress-fallback-integrity="true">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js" rel="stylesheet"></script>
+    </environment>
+    <link href="~/css/StyleSheet.min.css" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+</head>
+<body class="page-background">
+    <div class="container">
+        <div id="go-back-button">
+            <a id="go-up" href="#"><div id="arrow"></div></a>
+        </div>
+        <section class="menu-container" id="nav-bar">
+                <div id="mob-menu" style="display:none">
+                    <div class="row justify-content-center" style="height: 100%">
+                        <div class="col-12 text-center">
+                            <div class="mob-break-line"></div>
+                            <div class="mob-nav-link-wrap">
+                                <a class="mob-navigation-link" asp-controller="home" asp-action="index">Home</a>
+                            </div>
+                            <div class="mob-nav-link-wrap">
+                                <a class="mob-navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="Breakfast">Breakfast</a>
+                            </div>
+                            <div class="mob-nav-link-wrap">
+                                <a class="mob-navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="Dinner">Dinner</a>
+                            </div>
+                            <div class="mob-nav-link-wrap">
+                                <a class="mob-navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="Supper">Supper</a>
+                            </div>
+                            <div class="mob-nav-link-wrap">
+                                <a class="mob-navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="Drink">Drinks</a>
+                            </div>
+                            <div class="mob-nav-link-wrap">
+                                <a class="mob-navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="For Kids">For Kids</a>
+                            </div>
+                            <div class="mob-break-line mt-2 mb-2"></div>
+                            <div class="mob-nav-link-wrap">
+                                <a class="mob-navigation-link" asp-controller="home" asp-action="RandomRecipe" asp-route-querry="RandomRecipe">Random Recipe</a>
+                            </div>
+                            <div class="mob-nav-link-wrap">
+                                <a class="mob-navigation-link" asp-controller="home" asp-action="AdvancedSearch">Advanced Search</a>
+                            </div>
+                            <div class="mob-nav-link-wrap">
+                                <a href="#" class="mob-navigation-link" id="social-media-mob">Social Media</a>
+                            </div>
+
+                            <div class="mob-nav-link-wrap">
+                                <a href="#" class="mob-navigation-link" id="about-us-mob">About Us</a>
+                            </div>
+                            @if (signInManager.IsSignedIn(User))
+                            {
+                                <div class="mob-nav-link-wrap">
+                                    <a class="mob-navigation-link" asp-controller="home" asp- action="userpanelrecipes">User Panel</a>
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="mob-nav-link-wrap">
+                                    <a class="mob-navigation-link" asp-controller="account" asp-action="register">Register</a>
+                                </div>
+                                <div class="mob-nav-link-wrap">
+                                    <a class="mob-navigation-link" asp-controller="account" asp-action="login">Login</a>
+                                </div>
+
+
+                            }
+                        </div>
+                    </div>
+                    <div id="return-button">
+                        <div id="arrow-background"></div>
+                        <div id="arrow-ele"></div>
+                    </div>
+                </div>
+            <div class="row align-content-sm-center">
+                <div class="col-auto align-self-start pr-0 pl-0">
+                    <div class="logo-container">
+                        <div class="logo-circle"></div>
+                        <div class="logo-bottom"></div>
+                        <div class="logo-top"></div>
+                        <div class="logo-dot-one"></div>
+                        <div class="logo-dot-two"></div>
+                        <div class="logo-dot-three"></div>
+                    </div>
+                </div>
+                <div class="col-auto p-lg-0 m-lg-0 pl-md-3 align-items-center" style="max-width:100%">
+                    <h1 class="mt-2 mb-0 mob-logo-size">Chef Master</h1>
+                    <p class="very-small-text-light mob-have-recipes-text mob-font-size">We have over @recipeRepository.GetAllRecipe().Count() recipes!</p>
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <form method="post" asp-action="logout" asp-controller="account">
+                            <button type="submit" class="mob-logout-link mob-font-size">Logout</button>
+                        </form>
+                    }
+                </div>
+                <div class="col pr-0 pl-0">
+                    <div class="row justify-content-end">
+                        <div class="pr-0 pl-0">
+                            @if (signInManager.IsSignedIn(User))
+                            {
+                                <form method="post" asp-action="logout" asp-controller="account">
+                                    <button type="submit" class="text-logout-link">Logout @User.Identity.Name</button>
+                                </form>
+                            }
+                            <div class="mob-logo-container" id="mob-burger-button">
+                                <div class="logo-circle"></div>
+                                <div class="logo-bottom"></div>
+                                <div class="logo-top"></div>
+                                <div class="logo-dot-one"></div>
+                                <div class="logo-dot-two"></div>
+                                <div class="logo-dot-three"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-auto">
+                    <a class="navigation-link" asp-controller="home" asp-action="RandomRecipe" asp-route-querry="RandomRecipe">RANDOM RECIPE</a>
+                </div>
+                <div class="col-auto">
+                    <a class="navigation-link" asp-controller="home" asp-action="AdvancedSearch">ADVANCED SEARCH</a>
+                </div>
+                <div class="col-auto">
+                    <a href="#" class="navigation-link" id="social-media">SOCIAL MEDIA</a>
+                </div>
+                <div class="col-auto">
+                    <a href="#" class="navigation-link" id="about-us">ABOUT US</a>
+                </div>
+                @if (signInManager.IsSignedIn(User))
+                {
+                    <div class="col-auto">
+                        <a class="navigation-link" asp-controller="home" asp-action="userpanelrecipes">USER PANEL</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-auto">
+                        <a class="navigation-link" asp-controller="account" asp-action="register">REGISTER</a>
+                    </div>
+                    <div class="col-auto">
+                        <a class="navigation-link" asp-controller="account" asp-action="login">LOGIN</a>
+                    </div>
+                }
+
+
+
+            </div>
+
+            <div class="break-line"></div>
+
+            <div class="row">
+                <div class="col-auto pb-2">
+                    <a class="navigation-link" asp-controller="home" asp-action="index">HOME</a>
+                </div>
+                <div class="col-auto">
+                    <a class="navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="Breakfast">BREAKFAST</a>
+                </div>
+                <div class="col-auto">
+                    <a class="navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="Dinner">DINNER</a>
+                </div>
+                <div class="col-auto">
+                    <a class="navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="Supper">SUPPER</a>
+                </div>
+                <div class="col-auto">
+                    <a class="navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="Bakes">BAKES</a>
+                </div>
+                <div class="col-auto">
+                    <a class="navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="Drink">DRINKS</a>
+                </div>
+                <div class="col-auto">
+                    <a class="navigation-link" asp-controller="home" asp-action="Collections" asp-route-querry="For Kids">FOR KIDS</a>
+                </div>
+            </div>
+        </section>
+        <section class="row justify-content-center  mb-lg-3 mb-md-3">
+            <div class="col-12 col-md-12 col-lg-10 search-box-container text-center">
+                <div class="row justify-content-center">
+                    <div class="paragraph"></div>
+                    <p class="hughest-text" id="find-best-recipes">We will find the best recipes for you!</p>
+                </div>
+                <form method="get" asp-controller="Home" asp-action="Search">
+                    <div class="row justify-content-center">
+                        <div class="col-auto p-0">
+                            <div class="mob-paragraph"></div>
+                        </div>
+                        <div class="col-auto p-0">
+                            <label for="inputSearch" class="normal-text" id="search-for-recipe">Search for a recipe</label>
+                        </div>
+                    </div>
+                    <input type="search" name="query" class="form-control" aria-describedby="searchHelp" placeholder="Type recipe name..."
+                           value="@ViewData["MyQuery"]">
+                    <small id="mob-find-best-recipes">We will find the best recipes for you!</small>
+                    <input type="submit" class="btn main-button absolute-pos-button" value="SEARCH">
+                </form>
+            </div>
+        </section>
+        <section class="row justify-content-center mb-lg-5 mb-md-5">
+            <div class="col-md-12">
+                @RenderBody()
+            </div>
+        </section>
+        <section class="row justify-content-center mb-lg-5 mb-md-5">
+            <div class="col-md-12">
+                <div class="col-auto main-content-container  mb-3 mb-sm-5 text-center">
+                    <div class="text-left pt-5 pl-lg-5 pl-md-4 pl-sm-3 pl-3" id="about-us-section">
+                        <h2 class="very-big-text">ABOUT US</h2>
+                    </div>
+                    <div class="row text-left small-text pl-lg-5 pr-lg-5 pb-lg-5 pl-md-4 pr-md-4 pb-md-5  pl-sm-3 pr-sm-3 pb-sm-5 pl-3 pr-3 pb-5">
+                        CHEF MASTER is a constantly growing database of almost 30,000 recipes for dishes from around the world. We create it with passion for those who, like us, love to cook and bake. You will find the power of inspiration for every occasion, create your own culinary book, and you'll also learn a lot of culinary tips and tricks. Stay with us! CHEF MASTER is a special culinary website. Portal for you. A friendly, open place for beginner, advanced and aspiring cooking lovers. Are you looking for inspiration, new recipes, interesting ideas, dishes for every occasion, every day and festive? At [site address] you will find what you are looking for and more. [site address]  is real help and a great, practical solution especially for you. You can search for recipes in many ways - by entering the name of the ingredient (e.g. pumpkin, chicken, pasta), type of dish (e.g. casserole), holiday name (e.g. Easter) or type of cuisine (e.g. Italian). We also have a lot of tips for you, kitchen tricks, information on ingredients, spices, additives and cooking techniques. For busy people - a set of recipes for the week. Next to the recipes, you'll find photos of appetizing dishes, step-by-step instructions, videos and tips from Knorr chefs. We show and facilitate cooking. You are the chef in your own kitchen. And we provide recipes for your dishes for loved ones. Our recipes are simple, interesting and original, adapted to the seasons and available ingredients. This is a unique online cookbook with thousands of recipes and ideas. Every day we add new recipes. Do you dream of pumpkin soup? Are you following potato pancakes? Only here you will find over 20 recipes for each of these dishes.
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="row justify-content-center  mb-lg-5 mb-md-5">
+            <div class="col-md-12">
+                <div class="col-auto main-content-container mb-3 mb-sm-5 text-center">
+                    <div class="text-center pt-5 pb-3">
+                        <h2 class="very-big-text">SHORTCUTS</h2>
+                    </div>
+                    <div class="row  pl-lg-5 pr-lg-5 pb-lg-5 pl-md-4 pr-md-4 pb-md-5  pl-sm-3 pr-sm-3 pb-sm-5 pl-3 pr-3 pb-5">
+                        <div class="col-lg-3 col-md-6 col-sm-6 small-text center-all pb-md-3 pb-sm-3 pb-3">
+                            <ul class="list-unstyled text-center">
+                                <li>
+                                    <h3 class="very-big-text">Soups</h3>
+                                </li>
+                                <li>
+                                    <a href="#!">Onion Soup</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Tomato Soup</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Sour soup</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Mushrom Soup</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Cauliflower Soup</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Sorrel Soup</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Split Pea Soup</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 small-text center-all pb-md-3 pb-sm-3 pb-3">
+                            <ul class="list-unstyled text-center">
+                                <li>
+                                    <h3 class="very-big-text">Main Course</h3>
+                                </li>
+                                <li>
+                                    <a href="#!">Fish and Chips</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Chicken Tortilla</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Duck Breast</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Croquettes With Meat</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Backed Beans</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Mince Chops</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Skewers</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 small-text center-all pb-md-3 pb-sm-3 pb-3">
+                            <ul class="list-unstyled text-center">
+                                <li>
+                                    <h3 class="very-big-text">Salads</h3>
+                                </li>
+                                <li>
+                                <li>
+                                    <a href="#!">Chicken Salad</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Carrot Salad</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Vegetable Salad</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Broccoli Salad</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Red Cabbage Salad</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Leek Salad</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Cucumber Salad</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 small-text center-all pb-md-3 pb-sm-3 pb-3">
+                            <ul class="list-unstyled text-center">
+                                <li>
+                                    <h3 class="very-big-text">Desserts</h3>
+                                </li>
+                                <li>
+                                    <a href="#!">Oatmeal Cookies</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Chocolate Muffins</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Croissants Yeast</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Yeast Buns</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Rice With Apples</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Donuts</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Chocolate Ice Cream</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 small-text center-all pb-md-3 pb-sm-3 pb-3">
+                            <ul class="list-unstyled text-center">
+                                <li>
+                                    <h3 class="very-big-text">Cakes</h3>
+                                </li>
+                                <li>
+                                    <a href="#!">Cheese Cake</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Brownie</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Apple Pie</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Chocolate Cake</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Poppy Seed Cake</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Yogurt Cake</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Cold Cheesecake</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 small-text center-all pb-md-3 pb-sm-3 pb-3">
+                            <ul class="list-unstyled text-center">
+                                <li>
+                                    <h3 class="very-big-text">Pasta</h3>
+                                </li>
+                                <li>
+                                    <a href="#!">Pasta With Tuna</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Pasta With Spinach</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Penne with Chicken</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Chicken Casserole</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Spaghetti Bolognese</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Spaghetti Carbonara</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Lasagne</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 small-text  center-all pb-md-3 pb-sm-3 pb-3">
+                            <ul class="list-unstyled text-center">
+                                <li>
+                                    <h3 class="very-big-text">Groats and Rice</h3>
+                                </li>
+                                <li>
+                                    <a href="#!">Millet</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Risotto</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Risotto with Chicken</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Risotto With Mushrooms</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Doves</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Chili con carne</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Salad With Rice</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 small-text center-all pb-md-3 pb-sm-3 pb-3">
+                            <ul class="list-unstyled text-center">
+                                <li>
+                                    <h3 class="very-big-text">Vegetarian Dishes</h3>
+                                </li>
+                                <li>
+                                    <a href="#!">Lentil Balls</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Ratatouille</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Rice with Peas and Carrots</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Tart with Spinach</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Pizza with Spinach</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Vegetable Coughotto</a>
+                                </li>
+                                <li>
+                                    <a href="#!">Pumpkin Stew</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="col-auto main-content-container mb-3 mb-sm-5 text-center">
+                    <div class="text-center pt-5 pb-3" id="social-media-section">
+                        <h2 class="very-big-text">BE UP TO DATE</h2>
+                    </div>
+                    <div class="row center-all">
+                        <div class="col-4 pl-1 pr-1 pb-3 pr-lg-0 pl-lg-0 pr-md-0 pl-md-0 pb-lg-4 pb-md-4 ml-0 mr-0">
+                            <img src="~/images/layout/facebook.png" class="social-media-icon" />
+                        </div>
+                        <div class="col-4 pl-1 pr-1 pb-3 pr-lg-0 pl-lg-0 pr-md-0 pl-md-0 pb-lg-4 pb-md-4 ml-0 mr-0">
+                            <img src="~/images/layout/instagram.png" class="social-media-icon" />
+                        </div>
+                        <div class="col-4 pl-1 pr-1 pb-3 pr-lg-0 pl-lg-0 pr-md-0 pl-md-0 pb-lg-4 pb-md-4 ml-0 mr-0">
+                            <img src="~/images/layout/pinterest.png" class="social-media-icon" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <
+        <a href="https://www.freepik.com/free-photos-vectors/logo">Logo vector created by s.salvador - www.freepik.com</a>
+        Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+        Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+        <a target="_blank" href="https://icons8.com/icons/set/popular-man">Popular man icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+        <a target="_blank" href="https://icons8.com/icons/set/conference-background-selected">Staff icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+        <a target="_blank" href="https://icons8.com/icons/set/mark-as-favorite">Mark As Favorite icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+        <a target="_blank" href="https://icons8.com/icons/set/complaint">Complaint icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+        <a target="_blank" href="https://icons8.com/icons/set/comments--v1">Comments icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+        <a target="_blank" href="https://icons8.com/icons/set/facebook-new">Facebook icon</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+        <a href="https://www.freepik.com/free-photos-vectors/food">Food photo created by azerbaijan_stockers - www.freepik.com</a>
+        https://www.freepik.com/free-photos-vectors/background
+        https://www.freepik.com/free-photos-vectors/food
+        Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    @if (IsSectionDefined("Scripts"))
+    {
+        @RenderSection("Scripts", required: true);
+    }
+    <script>
+        var query;
+        function ChangeValue() {
+            query = document.getElementById('query').value;
+            document.getElementById('textid').innerHTML = query;
+        }
+    </script>
+    <script src="~/js/CustomScript.js"></script>
+    <script src="~/js/jquery.scrollTo.min.js"></script>
+</body>
+</html>

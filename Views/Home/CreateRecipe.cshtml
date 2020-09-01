@@ -1,0 +1,151 @@
+﻿@model RecipeViewModel
+
+@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager;
+
+@{
+    var user = await userManager.GetUserAsync(User);
+    ViewBag.Title = "User Panel";
+    var avatarPhotoPath = "~/images/avatars/" + (user.AvatarPhotoPatch ?? "user_no_avatar.png");
+}
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-sm-12 col-xl-4 col-lg-4 pl-0 pr-0 pr-md-3 pr-lg-3 pr-xl-3">
+            <div class="main-content-container text-center p-1 p-sm-3 p-md-3 p-lg-3 p-xl-3 mb-3 mb-sm-5 pb-2 pt-2">
+                <div class="col-auto justify-content-center">
+                    <div class="row justify-content-center m-1">
+                        <img src="@avatarPhotoPath" alt="sory, no image!" class="imageThubnail avatar-photo" asp-append-version="true" />
+                    </div>
+                    <div class="m-1"><h3 class="normal-bold-text" style="word-wrap: break-word">@user.AcconutName </h3></div>
+                    <div class="m-1"><h3 class="normal-text" style="word-wrap: break-word">@user.Email</h3></div>
+                    <div class=""><a class="small-text-shaded" asp-controller="home" asp-action="userpanelrecipes">Recipes</a></div>
+                    <div class="m-1"><a class="small-text-shaded" asp-controller="home" asp-action="userpanelchefs">Chefs</a></div>
+                    <div class="m-1"><a class="small-text-shaded" asp-controller="home" asp-action="userpanelfavourites">Favourites</a></div>
+                    <div class="break-line"></div>
+                    <div class="m-1"><a class="small-text-shaded" asp-controller="Account" asp-action="ChangePassword">Change password</a></div>
+                    <div class="m-1"><a class="small-text-shaded" asp-controller="Account" asp-action="ChangeAvatar" asp-route-id="@user.Id">Edit avatar</a></div>
+                    <div class="m-1"><a class="small-text-shaded" asp-controller="Account" asp-action="ChangeAccountName" asp-route-id="@user.Id">Change user name</a></div>
+                    <div class="break-line"></div>
+                    <div class="m-1"><a class="small-text-shaded" asp-controller="Home" asp-action="CreateRecipe">Add Recipe</a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-8 pr-0">
+            <div class="main-content-container pl-5 pr-5">
+                <div class="row text-left">
+                    <div class="text-left pt-4">
+                        <h2 class="normal-bold-text pt-4 mb-2">CREATE NEW RECIPE</h2>
+                    </div>
+                    <form enctype="multipart/form-data" asp-controller="Home" asp-action="CreateRecipe" method="post">
+                        <input type="hidden" asp-for="AuthorId" />
+                        <div class="row">
+                            <label asp-for="Name" class="normal-text"></label>
+                            <input asp-for="Name" name="Name" autocomplete="off" class="normal-text" placeholder="Enter recipe name..." />
+                            <span class="text-danger" asp-validation-for="Name"></span>
+
+
+                            <label asp-for="Hint" class="normal-text"></label>
+                            <textarea asp-for="Hint" name="Hint" autocomplete="off" class="normal-text" placeholder="Enter short hint of recipe... "> </textarea>
+                            <span class="text-danger" asp-validation-for="Hint"></span>
+
+
+                            <label asp-for="Description" class="normal-text"></label>
+                            <textarea asp-for="Description" name="Description" autocomplete="off" class="normal-text"> </textarea>
+                            <span class="text-danger" asp-validation-for="Description"></span>
+
+                            <div class="col-12 m-0 p-0">
+                                <div class="row justify-content-between">
+                                    <div class="col-auto pl-0 pr-0">
+                                        <label asp-for="DifficultLevel" class="normal-text"></label>
+                                        <div class="row">
+                                            <div class="center-all">
+                                                <input asp-for="DifficultLevel" type="radio" value="1" name="DifficultLevel" />
+                                                <label class="form-check-label snormal-text" asp-for="DifficultLevel">Easy</label>
+                                            </div>
+                                            <div class="center-all">
+                                                <input asp-for="DifficultLevel" type="radio" value="2" name="DifficultLevel" />
+                                                <label class="form-check-label normal-text" asp-for="DifficultLevel">Medium</label>
+                                            </div>
+                                            <div class="center-all">
+                                                <input asp-for="DifficultLevel" type="radio" value="3" name="DifficultLevel" />
+                                                <label class="form-check-label normal-text" asp-for="DifficultLevel">Hard</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto pr-0 pl-0">
+                                        <label asp-for="Time" class="normal-text"></label>
+                                        <input asp-for="Time" name="Time" autocomplete="off" class="normal-text" />
+                                        <span class="text-danger" asp-validation-for="Time"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 m-0 p-0">
+                                <div class="row justify-content-between">
+                                    <div class="col-auto pl-0">
+                                        <label asp-for="Ingridients" class="normal-text"></label>
+                                        <div id="allIngridients">
+                                            <div id="ingridientForm">
+                                                <input asp-for="Ingridients" name="Ingridients" autocomplete="off" class="normal-text" />
+                                                <span class="text-danger" asp-validation-for="Ingridients"></span>
+                                            </div>
+                                        </div>
+                                        <div id="ingridientsInfo"> </div>
+                                        <div class="row justify-content-between mt-2 mb-2">
+                                            <button onclick="addIngridient()" type="button" class="btn second-button">Add</button>
+                                            <button onclick="removeIngridient()" type="button" class="btn second-button">Remove</button>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-auto pr-0">
+                                        <label asp-for="Tags" class="normal-text"></label>
+                                        <div id="allTags">
+
+                                            <div id="tagsForm">
+                                                <input asp-for="Tags" name="Tags" autocomplete="off" class="normal-text" />
+                                                <span class="text-danger" asp-validation-for="Tags"></span>
+                                            </div>
+                                        </div>
+                                        <div id="tagsInfo"> </div>
+                                        <div class="row justify-content-between mt-2 mb-2">
+                                            <button onclick="addTag()" type="button" class="btn second-button">Add</button>
+                                            <button onclick="removeTag()" type="button" class="btn second-button">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="custom-file mt-3">
+                                <input asp-for="Photo" class="custom-file-input" id="customFile">
+                                <label asp-for="Photo" class="custom-file-label">Choose picture</label>
+                            </div>
+
+                            <div asp-validation-summary="All" class="text-danger"></div>
+
+                            <div class="col-12 c-0 p-0">
+                                <div class="row justify-content-center mt-3 mb-4">
+                                    <button type="submit" class="btn btn-primary main-button">Create</button>
+
+                                </div>
+                            </div>
+                            @*This script is required to display the selected file in the file upload element*@
+
+                            @section Scripts {
+                                <script>
+                                    $(document).ready(function () {
+                                        $('.custom-file-input').on("change", function () {
+                                            var fileName = $(this).val().split("\\").pop();
+                                            $(this).next('.custom-file-label').html(fileName);
+                                        });
+                                    });
+                                </script>
+                            }
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>

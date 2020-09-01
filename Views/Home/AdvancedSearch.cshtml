@@ -1,0 +1,255 @@
+﻿@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+
+@{ 
+    if (Model.ResultRecipes.Count <= 0)
+    {
+       ViewBag.NoSearchResult = "Unfortunately no results can be found for the details given"; 
+    }
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-4 col-md-4 pl-0 pr-0 col-12 pl-lg-2 pr-lg-2 pl-md-2 pr-md-2">
+        <div class="main-content-container row justify-content-center">
+            <div class="col-12 p-4 pb-5 pb-lg-3 pb-md-3 pb-sm-5">
+                <p class="normal-boldD-text text-left pt-lg-4 pt-md-3 pt-sm-2 pt-1 mb-4 ">ADVANCED SEARCH</p>
+
+                <form enctype="multipart/form-data" asp-controller="Home" asp-action="AdvancedSearch" method="get">
+                    <label for="name" class="normal-text" id="name">Name</label>
+                    <div>
+                        <input type="text" name="Name" class="normal-text" placeholder="Type recipe name..."
+                               value="@ViewBag.Name">
+                        <span class="text-danger" for="name"></span>
+                    </div>
+                    <div class="m-4"></div>
+
+
+                    <label for="ingridients" class="normal-text" id="ingridients">Ingridients</label>
+                    <div id="allIngridients">
+                        @if (ViewBag.Ingridients.Count < 1)
+                        {
+                            <div id="ingridientForm">
+                                <input for="Ingridients" name="Ingridients" autocomplete="off" class="normal-text" placeholder="Type ingridient name..." />
+                            </div>
+                        }
+                        @for (int i = 0; i < ViewBag.Ingridients.Count; i++)
+                        {
+                            <div id="ingridientForm">
+                                <input for="Ingridients" name="Ingridients" autocomplete="off" class="normal-text" value="@ViewBag.Ingridients[i]" />
+                            </div>
+                        }
+                    </div>
+                    <div id="ingridientsInfo"> </div>
+                    <div class="">
+                        <div class="row justify-content-end">
+                            <button onclick="addIngridient()" type="button" class="btn second-button m-1">Add</button>
+                            <button onclick="removeIngridient()" type="button" class="btn second-button m-1">Remove</button>
+                        </div>
+
+                    </div>
+                    <div class="m-4"></div>
+
+
+                    <div>
+                        <label for="tags" class="normal-text">Tags</label>
+                        <div id="allTags">
+
+                            @if (ViewBag.Tags.Count < 1)
+                            {
+                                <div id="tagsForm">
+                                    <input for="Tags" name="Tags" autocomplete="off" class="normal-text"                placeholder="Type tag..." />
+                                    </div>
+                            }
+                            @for (int i = 0; i < ViewBag.Tags.Count; i++)
+                            {
+                                <div id="tagsForm">
+                                    <input for="Tags" name="Tags" autocomplete="off" class="normal-text"                value="@ViewBag.Tags[i]" />
+                                </div>
+                            }
+
+                        </div>
+                        <div id="tagsInfo"> </div>
+                        <div class="">
+                            <div class="row justify-content-end">
+                                <button onclick="addTag()" type="button" class="btn second-button m-1">Add</button>
+                                <button onclick="removeTag()" type="button" class="btn second-button m-1">Remove</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="m-4"></div>
+                    <label for="timemin" class="normal-text" id="timemin">Minimum Time</label>
+                    <div>
+                        <input type="text" name="TimeMin" class="normal-text" placeholder="Type min time..."
+                               value="@ViewBag.Mintime">
+                    </div>
+                    <label for="timemax" class="normal-text" id="timemax">Maximum Time</label>
+                    <div>
+                        <input type="text" name="TimeMax" class="normal-text" placeholder="Type max time..."
+                               value="@ViewBag.Maxtime">
+                    </div>
+                    <label for="rating" class="normal-text" id="rating">Rating</label>
+                    <div>
+                        <input type="text" name="Rating" class="normal-text" placeholder="Type rating..."
+                               value="@ViewBag.Rating">
+                    </div>
+                    <div class="m-4"></div>
+
+                    <label for="difficulLevel" class="normal-text" id="difficultLevel">Difficult Level</label>
+                    <div class="row justify-content-left">
+                        @if (Model.DifficultLevel == 1)
+                        {
+                            <input for="difficultLevel" type="radio" name="difficultLevel"  placeholder="Type difficult level..."
+                                   value="1" checked="checked" >
+                        }
+                        else
+                        {
+                    <input for="difficultLevel" type="radio" name="difficultLevel" placeholder="Type difficult level..."
+                           value="1">
+                        }
+                        <label class="normal-text" for="difficultLevel">Easy</label>
+                    </div>
+                    <div class="row justify-content-left">
+                        @if (Model.DifficultLevel == 2)
+                        {
+                        <input for="difficultLevel" type="radio" name="difficultLevel" placeholder="Type difficult level..."
+                               value="2" checked="checked">
+                        }
+                        else
+                        {
+                    <input for="difficultLevel" type="radio" name="difficultLevel" placeholder="Type difficult level..."
+                           value="2">
+                        }
+                        <label class="normal-text" for="difficultLevel">Medium</label>
+                    </div>
+                    <div class="row justify-content-left">
+                        @if (Model.DifficultLevel == 3)
+                        {
+                        <input for="difficultLevel" type="radio" name="difficultLevel" placeholder="Type difficult level..."
+                               value="3" checked="checked">
+                        }
+                        else
+                        {
+                    <input for="difficultLevel" type="radio" name="difficultLevel" placeholder="Type difficult level..."
+                           value="3">
+                        }
+                        <label class="normal-text" for="difficultLevel">Hard</label>
+                    </div>
+
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="center-all">
+                        <input type="submit" class="btn main-button" value="Search">
+                    </div>
+                    @*This script is required to display the selected file in the file upload element*@
+
+                    @section Scripts {
+                        <script>
+                            $(document).ready(function () {
+                                $('.custom-file-input').on("change", function () {
+                                    var fileName = $(this).val().split("\\").pop();
+                                    $(this).next('.custom-file-label').html(fileName);
+                                });
+                            });
+                        </script>
+                    }
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-12  pl-0 pr-0  col-md-8  col-lg-8  pl-lg-2 pr-lg-2 pl-md-2 pr-md-2">
+        <div class="main-content-container">
+            <p class="normal-bold-text text-center pt-4 mb-2 ">SEARCH RESULT</p>
+            <p class="normal-bold-text text-center pt-4 mb-2 ">@ViewBag.NoSearchResult</p>
+            <div class="row text-center">
+                @foreach (var recipe in Model.ResultRecipes)
+                {
+                    var user = await userManager.FindByIdAsync(recipe.AuthorId);
+                    var photoPath = "~/images/" + (recipe.PhotoPatch ?? "leczo.jpg");
+                    <div class="col-auto m-0 p-2 recipe-box-size-div">
+                        <div class="recipe-box">
+                            <img src="@photoPath" alt="sory, no image!" class="imageThubnail recipe-box-img" asp-append-version="true" style="width:100%" />
+                            <div class="recipe-box-desc center-all">
+                                <span class="big-text">@recipe.Name</span>
+                            </div>
+                            <div class="recipe-box-desc-details center-all">
+                                <a asp-controller="home" asp-action="details" asp-route-id="@recipe.EncryptedId">
+                                    <div class="col">
+                                        <div>
+                                            <span class="big-bold-text">@recipe.Name</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <p class="very-small-shaded-text">"@recipe.Hint"</p>
+                                        </div>
+                                        <div class="m-1">
+                                            <div class="row justify-content-center">
+                                                @for (int i = 1; i < 6; i++)
+                                                {
+                                                    if (recipe.Rating > i - 1)
+                                                    {
+                                                        <div class="star-full"></div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="star-empty"></div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="m-1">
+                                            @if (@recipe.DifficultLevel == 1)
+                                            {
+                                                <span class="normal-text">Easy to do</span>
+                                            }
+                                            else if (@recipe.DifficultLevel == 2)
+                                            {
+                                                <span class="normal-text">Average to do</span>
+                                            }
+                                            else if (@recipe.DifficultLevel == 3)
+                                            {
+                                                <span class="normal-text">Hard to do</span>
+                                            }
+                                        </div>
+                                        <div class="m-1">
+                                            <img src="~/images/layout/clock.png" class="recipe-desc-img" />
+                                            <span class="normal-text">@recipe.Time.ToString()min</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-auto">
+                    @Html.PagedListPager((IPagedList)Model.ResultRecipes, page => Url.Action(
+                        "AdvancedSearch", 
+                        new
+                            {
+      
+                                    name = ViewBag.Name,
+                                    ingridients = ViewBag.Ingridients,
+                                    tags = ViewBag.Tags,
+                                    timeMin = ViewBag.MinTime,
+                                    timeMax = ViewBag.MaxTime, 
+                                    rating = ViewBag.Rating,
+                                    authorName = ViewBag.AuthorName,
+                                    difficultLevel = ViewBag.DifficultLevel,
+                                    page = page
+                        }),
+                    new X.PagedList.Mvc.Core.Common.PagedListRenderOptions
+                    {
+                        ContainerDivClasses = new[] { "navigation" },
+                        LiElementClasses = new[] { "page-item normal-text" },
+                        PageClasses = new[] { "page-link normal-text page-item" },
+                        ActiveLiElementClass = "page-acvite",
+                
+                    });
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

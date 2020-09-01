@@ -1,0 +1,113 @@
+﻿@model IEnumerable<Recipe>
+@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager;
+@inject IObserveRepository observeRepository;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+
+@{
+    var user = await userManager.GetUserAsync(User);
+    ViewBag.Title = "User Panel";
+    var avatarPhotoPath = "~/images/avatars/" + (user.AvatarPhotoPatch ?? "user_no_avatar.png");
+}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-sm-12 col-xl-4 col-lg-4 pl-0 pr-0 pr-md-3 pr-lg-3 pr-xl-3">
+        <div class="main-content-container text-center p-1 p-sm-3 p-md-3 p-lg-3 p-xl-3 mb-3 mb-sm-5 pb-2 pt-2">
+            <div class="col-auto justify-content-center">
+                <div class="row justify-content-center m-1">
+                    <img src="@avatarPhotoPath" alt="sory, no image!" class="imageThubnail avatar-photo" asp-append-version="true" />
+                </div>
+                <div class="m-1"><h3 class="normal-bold-text" style="word-wrap: break-word">@user.AcconutName </h3></div>
+                <div class="m-1"><h3 class="normal-text" style="word-wrap: break-word">@user.Email</h3></div>
+                <div class=""><a class="small-text-shaded" asp-controller="home" asp-action="userpanelrecipes">Recipes</a></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="home" asp-action="userpanelchefs">Chefs</a></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="home" asp-action="userpanelfavourites">Favourites</a></div>
+                <div class="break-line"></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="Account" asp-action="ChangePassword">Change password</a></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="Account" asp-action="ChangeAvatar" asp-route-id="@user.Id">Edit avatar</a></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="Account" asp-action="ChangeAccountName" asp-route-id="@user.Id">Change user name</a></div>
+                <div class="break-line"></div>
+                <div class="m-1"><a class="small-text-shaded" asp-controller="Home" asp-action="CreateRecipe">Add Recipe</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-xl-8 col-lg-8 pr-0 pl-0">
+        <div class="main-content-container  mb-3 mb-sm-5">
+            <p class="normal-bold-text pt-4 mb-2 ml-4">YOUR RECIPES</p>
+            <div class="row text-center">
+                @foreach (var recipe in Model)
+                {
+                    var photoPath = "~/images/" + (recipe.PhotoPatch ?? "leczo.jpg");
+                    <div class="col-auto m-0 p-2 recipe-box-size-us-pan">
+                        <div class="recipe-box">
+                            <img src="@photoPath" alt="sory, no image!" class="imageThubnail recipe-box-img" asp-append-version="true" style="width:100%" />
+                            <div class="recipe-box-desc center-all">
+                                <span class="big-text">@recipe.Name</span>
+                            </div>
+                            <div class="recipe-box-desc-details center-all">
+                                <a asp-controller="home" asp-action="details" asp-route-id="@recipe.EncryptedId">
+                                    <div class="col">
+                                        <div>
+                                            <span class="big-bold-text">@recipe.Name</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <p class="very-small-shaded-text">"@recipe.Hint"</p>
+                                        </div>
+                                        <div class="m-1">
+                                            <div class="row justify-content-center">
+                                                @for (int i = 1; i < 6; i++)
+                                                {
+                                                    if (recipe.Rating > i - 1)
+                                                    {
+                                                        <div class="star-full"></div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="star-empty"></div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="m-1">
+                                            @if (@recipe.DifficultLevel == 1)
+                                            {
+                                                <span class="normal-text">Easy to do</span>
+                                            }
+                                            else if (@recipe.DifficultLevel == 2)
+                                            {
+                                                <span class="normal-text">Average to do</span>
+                                            }
+                                            else if (@recipe.DifficultLevel == 3)
+                                            {
+                                                <span class="normal-text">Hard to do</span>
+                                            }
+                                        </div>
+                                        <div class="m-1">
+                                            <img src="~/images/layout/clock.png" class="recipe-desc-img" />
+                                            <span class="normal-text">@recipe.Time.ToString()min</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-auto">
+                    @Html.PagedListPager((IPagedList)Model, page => Url.Action("UserPanelRecipes", new { page = page }),
+        new X.PagedList.Mvc.Core.Common.PagedListRenderOptions
+        {
+        ContainerDivClasses = new[] { "mb-3" },
+                LiElementClasses = new[] { "page-item normal-text" },
+                PageClasses = new[] { "page-link normal-text page-item" },
+                ActiveLiElementClass = "page-acvite",
+        })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

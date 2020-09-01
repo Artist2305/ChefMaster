@@ -1,0 +1,14 @@
+﻿@model int
+
+@{
+    ViewBag.Title = "404 Error";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-sm-12 col-xs-12 greenCard">
+        <h4><span class="main-bold-text-style main-text-color">404 Not Found Error</span></h4>
+        <hr />
+        <h5><span class="main-normal-text-style main-text-color">Recipe with Id = @Model cannot be found</span></h5>
+        <a asp-controller="home" asp-action="userPanel">Click and return to User Panel</a>
+    </div>
+</div>
