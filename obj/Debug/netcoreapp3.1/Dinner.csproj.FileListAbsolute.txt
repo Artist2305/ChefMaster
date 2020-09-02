@@ -256,3 +256,4 @@ C:\Users\Mateusz Szostek\Documents\GitHub\ChefMaster\obj\Debug\netcoreapp3.1\sta
 C:\Users\Mateusz Szostek\Documents\GitHub\ChefMaster\obj\Debug\netcoreapp3.1\staticwebassets\Dinner.StaticWebAssets.xml
 C:\Users\Mateusz Szostek\Documents\GitHub\ChefMaster\obj\Debug\netcoreapp3.1\Dinner.dll
 C:\Users\Mateusz Szostek\Documents\GitHub\ChefMaster\obj\Debug\netcoreapp3.1\Dinner.pdb
+C:\Users\Mateusz Szostek\Documents\GitHub\ChefMaster\bin\Debug\netcoreapp3.1\prepros.config

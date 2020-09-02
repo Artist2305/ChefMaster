@@ -86,8 +86,8 @@ $(function () {
                 overalRating.html("Rate the recipe to advise others! Average: " + response.tempOveralRating + " (" + response.tempAmountOfRates + " votes)");
 
                 for (var i = 0; i < response.tempOveralRating; i++) {
-                    stars.eq(i).addClass("starIconFull");
-                    stars.eq(i).removeClass("starIconEmpty");
+                    stars.eq(i).addClass("star-full");
+                    stars.eq(i).removeClass("star-empty");
                     console.log(i);
                 }
 

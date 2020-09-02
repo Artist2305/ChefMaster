@@ -8,29 +8,33 @@
         <h1 class="main-bold-text-style main-text-color">Edit recipe</h1>
     </div>
 </div>
-<div class="row justify-content-center text-center">
-    <div class="col-8 squareElement text-center">
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-12 main-content-container text-left pl-4 pr-4 pl-lg-5 pr-lg-5 pl-md-5 pr-md-5 pb-3 pb-lg-2 pb-md-2 pb-sm-2 mb-3 mb-sm-5 mb-md-2 mb-lg-2  mb-xl-2">
+        <div class="text-left pt-4">
+            <h2 class="huge-text">EDIT RECIPE</h2>
+        </div>
         <form enctype="multipart/form-data" asp-controller="Home" asp-action="edit" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="AuthorId" />
             <input hidden asp-for="EncryptedId" />
             <input hidden asp-for="ExistingPhotoPath" />
 
-            <div>
-                <label asp-for="Name" class="main-normal-text-style main-text-color"></label>
-                <input asp-for="Name" name="Name" autocomplete="off" class="second-normal-text-style" />
+
+                <label asp-for="Name" class="normal-text"></label>
+                <input asp-for="Name" name="Name" autocomplete="off" class="normal-text" />
                 <span class="text-danger" asp-validation-for="Name"></span>
-            </div>
-            <div>
-                <label asp-for="Hint" class="main-normal-text-style main-text-color"></label>
-                <textarea asp-for="Hint" name="Hint" autocomplete="off" class="second-normal-text-style"> </textarea>
+    
+          
+                <label asp-for="Hint" class="normal-text"></label>
+                <textarea asp-for="Hint" name="Hint" autocomplete="off" class="normal-text"> </textarea>
                 <span class="text-danger" asp-validation-for="Hint"></span>
-            </div>
-            <div>
-                <label asp-for="Description" class="main-normal-text-style main-text-color"></label>
-                <textarea asp-for="Description" name="Description" autocomplete="off" class="second-normal-text-style"> </textarea>
+          
+       
+                <label asp-for="Description" class="normal-text"></label>
+                <textarea asp-for="Description" name="Description" autocomplete="off" class="normal-text"> </textarea>
                 <span class="text-danger" asp-validation-for="Description"></span>
-            </div>
+        
 
             <div class="row">
                 <div class="col-6">
@@ -39,13 +43,13 @@
                         @foreach (var ingridient in Model.Ingridients)
                         {
                             <div id="ingridientForm">
-                                <input asp-for="Ingridients" name="Ingridients" autocomplete="off" class="second-normal-text-style" value="@ingridient" />
+                                <input asp-for="Ingridients" name="Ingridients" autocomplete="off" class="normal-text" value="@ingridient" />
                                 <span class="text-danger" asp-validation-for="Ingridients"></span>
                             </div>
                         }
                     </div>
                     <div id="ingridientsInfo"> </div>
-                    <button onclick="addIngridient()" type="button" class="btn btn-primary secondButton">Add Ingridient</button>
+                    <button onclick="addIngridient()" type="button" class="btn second-button">Add Ingridient</button>
                 </div>
                 <div class="col-6">
                     <label asp-for="Tags" class="main-normal-text-style main-text-color"></label>
@@ -53,20 +57,39 @@
                         @foreach (var tag in Model.Tags)
                         {
                             <div id="tagsForm">
-                                <input asp-for="Tags" name="Tags" autocomplete="off" class="second-normal-text-style" value="@tag" />
+                                <input asp-for="Tags" name="Tags" autocomplete="off" class="normal-text" value="@tag" />
                                 <span class="text-danger" asp-validation-for="Tags"></span>
                             </div>
                         }
                     </div>
                     <div id="tagsInfo"> </div>
-                    <button onclick="addTag()" type="button" class="btn btn-primary secondButton">Add tag</button>
+                    <button onclick="addTag()" type="button" class="btn second-button">Add tag</button>
                 </div>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-6">
-                    <p><label asp-for="Time" class="main-normal-text-style main-text-color"></label></p>
-                    <input asp-for="Time" name="Time" autocomplete="off" class="second-normal-text-style" />
-                    <span class="text-danger" asp-validation-for="Time"></span>
+            <div class="col-12 m-0 p-0">
+                <div class="row justify-content-between">
+                    <div class="col-auto pl-0 pr-0">
+                        <label asp-for="DifficultLevel" class="normal-text"></label>
+                        <div class="row">
+                            <div class="center-all">
+                                <input asp-for="DifficultLevel" type="radio" value="1" name="DifficultLevel" />
+                                <label class="form-check-label snormal-text" asp-for="DifficultLevel">Easy</label>
+                            </div>
+                            <div class="center-all">
+                                <input asp-for="DifficultLevel" type="radio" value="2" name="DifficultLevel" />
+                                <label class="form-check-label normal-text" asp-for="DifficultLevel">Medium</label>
+                            </div>
+                            <div class="center-all">
+                                <input asp-for="DifficultLevel" type="radio" value="3" name="DifficultLevel" />
+                                <label class="form-check-label normal-text" asp-for="DifficultLevel">Hard</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto pr-0 pl-0">
+                        <label asp-for="Time" class="normal-text"></label>
+                        <input asp-for="Time" name="Time" autocomplete="off" class="normal-text" />
+                        <span class="text-danger" asp-validation-for="Time"></span>
+                    </div>
                 </div>
             </div>
             <div class="form-group row text-center justify-content-center">
@@ -82,8 +105,8 @@
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div>
-                <a asp-controller="home" asp-action="userPanel" class="btn btn-primary secondButton">Back</a>
-                <button type="submit" class="btn btn-primary secondButton">Update</button>
+                <a asp-controller="home" asp-action="userPanel" class="btn second-button">Back</a>
+                <button type="submit" class="btn second-button">Update</button>
             </div>
 
             <script>
@@ -103,5 +126,6 @@
                 </script>
             }
         </form>
+
     </div>
 </div>

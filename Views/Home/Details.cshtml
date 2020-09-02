@@ -238,7 +238,9 @@
             @{
                 if (loggedUserId == Model.Recipe.AuthorId)
                 {
-                    <button asp-controller="home" asp-action="edit" asp-route-id="@Model.Recipe.EncryptedId" class="btn main-button">Edit</button>
+                    <form  method="get" enctype="multipart/form-data" asp-controller="Home" asp-action="Edit">
+                    <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Recipe.EncryptedId" class="btn main-button">Edit</a>
+                </form> 
                 }
             }
         </div>
@@ -253,7 +255,7 @@
                 var addidionalPhotoPath = "~/images/" + (recipe.PhotoPatch ?? "leczo.jpg");
                 <div class="col-auto p-1 center-all recipe-box-size-details">
                     <div class="recipe-box center-all">
-                        <img src="@photoPath" alt="sory, no image!" class="imageThubnail recipe-box-img" asp-append-version="true" style="width:100%" />
+                        <img src="@addidionalPhotoPath" alt="sory, no image!" class="imageThubnail recipe-box-img" asp-append-version="true" style="width:100%" />
                         <div class="recipe-box-desc text-center center-all">
                             <span class="big-text">@recipe.Name</span>
                         </div>
@@ -315,7 +317,7 @@
                 var addidionalPhotoPath = "~/images/" + (recipe.PhotoPatch ?? "leczo.jpg");
                 <div class="col-auto p-1 center-all recipe-box-size-details">
                     <div class="recipe-box center-all">
-                        <img src="@photoPath" alt="sory, no image!" class="imageThubnail recipe-box-img" asp-append-version="true" style="width:100%" />
+                        <img src="@addidionalPhotoPath" alt="sory, no image!" class="imageThubnail recipe-box-img" asp-append-version="true" style="width:100%" />
                         <div class="recipe-box-desc text-center center-all">
                             <span class="big-text">@recipe.Name</span>
                         </div>

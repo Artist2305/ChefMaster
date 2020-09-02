@@ -222,7 +222,7 @@ a:hover {
 }
 
 .big-text {
-    @include font-customize(20px,$main-text-color, 500);
+    @include font-customize(18px,$main-text-color, 500);
     letter-spacing: -1px;
 }
 
@@ -587,7 +587,7 @@ textarea[name=Description] {
 }
 
 .details-img img {
-    width:100%;
+    width:95%;
     top: 0%;
     bottom: 0%;
     left: 0%;
